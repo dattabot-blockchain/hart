@@ -446,7 +446,7 @@ contract CappedToken is MintableToken {
 // File: contracts/TokenERC20.sol
 
 contract HaraToken is BurnableToken, CappedToken {
-    string public constant name = "HARA Token";
+    string public constant name = "HaraToken";
     string public constant symbol = "HART";
     uint8 public constant decimals = 18;
     
@@ -497,7 +497,7 @@ contract HaraToken is BurnableToken, CappedToken {
     /**
     * @dev Function to hash burn and mint details.
     * @param id The unique burn ID.
-    * @param requester The address that will receive the minted tokens.
+    * @param burner The address that will receive the minted tokens.
     * @param value The amount of tokens to mint.
     * @return bytes32 from keccak256 hash of inputs.
     */
