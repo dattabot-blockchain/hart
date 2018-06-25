@@ -1,0 +1,17 @@
+{
+  "name": "erc20",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build-contracts": "truffle-flattener contracts/TokenERC20.sol"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "openzeppelin-solidity": "^1.10.0",
+    "sol-merger": "^0.1.2",
+    "truffle": "^4.1.12"
+  }
+}
