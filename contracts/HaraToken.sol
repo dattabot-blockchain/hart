@@ -443,16 +443,16 @@ contract CappedToken is MintableToken {
 
 }
 
-// File: contracts/TokenERC20.sol
+// File: contracts/HaraToken.sol
 
-contract HaraToken is BurnableToken, CappedToken {
+contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18))) {
     string public constant name = "HaraToken";
     string public constant symbol = "HART";
     uint8 public constant decimals = 18;
     
-    uint256 public constant INITIAL_SUPPLY = 12 * (10 ** uint256(decimals));
+    uint256 public constant INITIAL_SUPPLY = 12000 * (10 ** 5) * (10 ** uint256(decimals));
 
-    uint public nonce = 0;
+    uint public nonce;
     mapping (uint => bool) public mintStatus;
 
     event BurnLog(uint indexed id, address indexed burner, uint256 value, bytes32 hashDetails);
@@ -464,7 +464,7 @@ contract HaraToken is BurnableToken, CappedToken {
     constructor() public {
         totalSupply_ = INITIAL_SUPPLY;
         balances[msg.sender] = INITIAL_SUPPLY;
-        emit Transfer(address(0), msg.sender, INITIAL_SUPPLY);
+        emit Transfer(address(0), address(0xE1b0EB833c3EB0CaFdd1646f20444a4712f33225), INITIAL_SUPPLY);
     }
     
     /**
@@ -474,7 +474,7 @@ contract HaraToken is BurnableToken, CappedToken {
     function burnToken(uint value) public {
         burn(value);
         emit BurnLog(nonce, msg.sender, value, hashDetails(nonce, msg.sender, value));
-        nonce = nonce++;
+        nonce = nonce + 1;
     }
 
     /**
@@ -491,6 +491,7 @@ contract HaraToken is BurnableToken, CappedToken {
         require(hashInput == hash, "request item are not valid");
         bool status = mint(requester, value);
         emit MintLog(id, requester, value, status);
+        mintStatus[id] = status;
         return status;
     }
 

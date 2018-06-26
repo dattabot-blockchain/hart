@@ -1,4 +1,5 @@
-import decodeLogs from '../helpers/decodeLogs';
+import decodeLogs from 'openzeppelin-solidity/test/helpers/decodeLogs';
+
 const HaraToken = artifacts.require('HaraToken');
 
 contract('HaraToken', accounts => {
@@ -31,7 +32,7 @@ contract('HaraToken', accounts => {
     assert(creatorBalance.eq(totalSupply));
 
     const receipt = web3.eth.getTransactionReceipt(token.transactionHash);
-    const logs = decodeLogs(receipt.logs, SimpleToken, token.address);
+    const logs = decodeLogs(receipt.logs, HaraToken, token.address);
     assert.equal(logs.length, 1);
     assert.equal(logs[0].event, 'Transfer');
     assert.equal(logs[0].args.from.valueOf(), 0x0);
