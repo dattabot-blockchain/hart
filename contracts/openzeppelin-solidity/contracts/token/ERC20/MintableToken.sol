@@ -15,6 +15,7 @@ contract MintableToken is StandardToken, Ownable {
 
   bool public mintingFinished = false;
 
+  address public minter;
 
   modifier canMint() {
     require(!mintingFinished);
@@ -22,10 +23,15 @@ contract MintableToken is StandardToken, Ownable {
   }
 
   modifier hasMintPermission() {
-    require(msg.sender == owner);
+    require(msg.sender == owner || msg.sender == minter);
     _;
   }
 
+
+  function setMinter(address allowedMinter) public onlyOwner returns (bool){
+    minter = allowedMinter;
+    return true;
+  }
   /**
    * @dev Function to mint tokens
    * @param _to The address that will receive the minted tokens.

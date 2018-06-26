@@ -353,7 +353,6 @@ contract StandardToken is ERC20, BasicToken {
 /**
  * @title Mintable token
  * @dev Simple ERC20 Token example, with mintable token creation
- * @dev Issue: * https://github.com/OpenZeppelin/openzeppelin-solidity/issues/120
  * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
  */
 contract MintableToken is StandardToken, Ownable {
@@ -362,6 +361,7 @@ contract MintableToken is StandardToken, Ownable {
 
   bool public mintingFinished = false;
 
+  address public minter;
 
   modifier canMint() {
     require(!mintingFinished);
@@ -369,10 +369,15 @@ contract MintableToken is StandardToken, Ownable {
   }
 
   modifier hasMintPermission() {
-    require(msg.sender == owner);
+    require(msg.sender == owner || msg.sender == minter);
     _;
   }
 
+
+  function setMinter(address allowedMinter) public onlyOwner returns (bool){
+    minter = allowedMinter;
+    return true;
+  }
   /**
    * @dev Function to mint tokens
    * @param _to The address that will receive the minted tokens.
@@ -406,6 +411,7 @@ contract MintableToken is StandardToken, Ownable {
   }
 }
 
+
 // File: openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol
 
 /**
@@ -431,7 +437,7 @@ contract CappedToken is MintableToken {
     address _to,
     uint256 _amount
   )
-    onlyOwner
+    hasMintPermission
     canMint
     public
     returns (bool)
@@ -454,6 +460,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
 
     uint256 public nonce;
     mapping (uint256 => bool) public mintStatus;
+    address public minter;
 
     event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails);
     event MintLog(uint256 indexed id, address indexed requester, uint256 value, bool status);
@@ -493,6 +500,16 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
         emit MintLog(id, requester, value, status);
         mintStatus[id] = status;
         return status;
+    }
+
+    function setMinter(address allowedMinter) public onlyOwner returns (bool) {
+      minter = allowedMinter;
+      return true;
+    }
+
+    modifier hasMintPermission() {
+    require(msg.sender == owner || msg.sender == minter);
+    _;
     }
 
     /**
