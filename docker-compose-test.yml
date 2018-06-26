@@ -12,7 +12,7 @@ services:
     - LIVE_HOST=${LIVE_HOST}
     - LIVE_ADDRESS=${LIVE_ADDRESS}
     - LIVE_PORT=${LIVE_PORT}
-    command: truffle test --network development
+    command: bash -c "truffle test --network development"
     volumes:
     - .:/code
     depends_on:
