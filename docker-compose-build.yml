@@ -8,5 +8,3 @@ services:
     - LIVE_ADDRESS=${LIVE_ADDRESS}
     - LIVE_PORT=${LIVE_PORT} 
     command: bash -c "truffle compile --network development"
-    volumes:
-    - .:/code

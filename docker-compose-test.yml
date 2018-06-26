@@ -13,7 +13,5 @@ services:
     - LIVE_ADDRESS=${LIVE_ADDRESS}
     - LIVE_PORT=${LIVE_PORT}
     command: bash -c "truffle test --network development"
-    volumes:
-    - .:/code
     depends_on:
     - ganache

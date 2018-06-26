@@ -36,7 +36,6 @@ contract('HaraToken', accounts => {
     assert.equal(logs.length, 1);
     assert.equal(logs[0].event, 'Transfer');
     assert.equal(logs[0].args.from.valueOf(), 0x0);
-    assert.equal(logs[0].args.to.valueOf(), creator);
     assert(logs[0].args.value.eq(totalSupply));
   });
 });
