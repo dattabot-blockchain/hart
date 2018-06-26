@@ -11,7 +11,8 @@ module.exports = {
   // to customize your Truffle configuration!
   networks: {
     development: {
-      host: process.env.DEVELOPMENT_HOST,
+      // host: process.env.DEVELOPMENT_HOST,
+      host: "localhost",
       port: 8545,
       network_id: "*", // Match any network id
       gas: 4700000

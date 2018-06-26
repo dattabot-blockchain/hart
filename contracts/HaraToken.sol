@@ -463,8 +463,8 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     */
     constructor() public {
         totalSupply_ = INITIAL_SUPPLY;
-        balances[address(0xE1b0EB833c3EB0CaFdd1646f20444a4712f33225)] = INITIAL_SUPPLY;
-        emit Transfer(address(0), address(0xE1b0EB833c3EB0CaFdd1646f20444a4712f33225), INITIAL_SUPPLY);
+        balances[msg.sender] = INITIAL_SUPPLY;
+        emit Transfer(address(0), msg.sender, INITIAL_SUPPLY);
     }
     
     /**
