@@ -1,6 +1,6 @@
 version: '3'
 services:
-  truffle_refund:
+  truffle_hart:
     image: harttruffle:dev
     environment:
     - DEVELOPMENT_HOST=${DEVELOPMENT_HOST}

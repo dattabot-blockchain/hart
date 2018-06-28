@@ -460,7 +460,6 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
 
     uint256 public nonce;
     mapping (uint256 => bool) public mintStatus;
-    address public minter;
 
     event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails);
     event MintLog(uint256 indexed id, address indexed requester, uint256 value, bool status);
@@ -500,16 +499,6 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
         emit MintLog(id, requester, value, status);
         mintStatus[id] = status;
         return status;
-    }
-
-    function setMinter(address allowedMinter) public onlyOwner returns (bool) {
-      minter = allowedMinter;
-      return true;
-    }
-
-    modifier hasMintPermission() {
-    require(msg.sender == owner || msg.sender == minter);
-    _;
     }
 
     /**
