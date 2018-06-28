@@ -14,7 +14,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     uint256 public nonce;
     mapping (uint256 => bool) public mintStatus;
 
-    event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails);
+    event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails, string data);
     event MintLog(uint256 indexed id, address indexed requester, uint256 value, bool status);
 
     /**
@@ -29,11 +29,20 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     /**
     * @dev Function to burn tokens
     * @param value The amount of tokens to burn.
+    * @param data String of description.
+    */
+    function burnToken(uint256 value, string data) public {
+        burn(value);
+        emit BurnLog(nonce, msg.sender, value, hashDetails(nonce, msg.sender, value), data);
+        nonce = nonce + 1;
+    }
+
+    /**
+    * @dev Function to burn tokens
+    * @param value The amount of tokens to burn.
     */
     function burnToken(uint256 value) public {
-        burn(value);
-        emit BurnLog(nonce, msg.sender, value, hashDetails(nonce, msg.sender, value));
-        nonce = nonce + 1;
+        burnToken(value, "");
     }
 
     /**
