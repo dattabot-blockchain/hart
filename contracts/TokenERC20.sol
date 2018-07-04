@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
+import "./openzeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
+import "./openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
 
 
 contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18))) {

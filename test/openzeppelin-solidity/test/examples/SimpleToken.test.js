@@ -1,25 +1,22 @@
-import decodeLogs from './openzeppelin-solidity/test/helpers/decodeLogs';
+import decodeLogs from '../helpers/decodeLogs';
+const SimpleToken = artifacts.require('SimpleToken');
 
-const HaraToken = artifacts.require('HaraToken');
-
-contract('HaraToken', accounts => {
+contract('SimpleToken', accounts => {
   let token;
   const creator = accounts[0];
-  const minter = accounts[1];
-  const burner = accounts[2];
 
   beforeEach(async function () {
-    token = await HaraToken.new({ from: creator });
+    token = await SimpleToken.new({ from: creator });
   });
 
   it('has a name', async function () {
     const name = await token.name();
-    assert.equal(name, 'HaraToken');
+    assert.equal(name, 'SimpleToken');
   });
 
   it('has a symbol', async function () {
     const symbol = await token.symbol();
-    assert.equal(symbol, 'HART');
+    assert.equal(symbol, 'SIM');
   });
 
   it('has 18 decimals', async function () {
@@ -34,18 +31,11 @@ contract('HaraToken', accounts => {
     assert(creatorBalance.eq(totalSupply));
 
     const receipt = web3.eth.getTransactionReceipt(token.transactionHash);
-    const logs = decodeLogs(receipt.logs, HaraToken, token.address);
+    const logs = decodeLogs(receipt.logs, SimpleToken, token.address);
     assert.equal(logs.length, 1);
     assert.equal(logs[0].event, 'Transfer');
     assert.equal(logs[0].args.from.valueOf(), 0x0);
     assert.equal(logs[0].args.to.valueOf(), creator);
     assert(logs[0].args.value.eq(totalSupply));
   });
-
-  it('transfer 10 token to burner', async function () {
-    await token.transfer(burner, 10, { from: creator });
-    const userToken = await token.balanceOf(burner);
-    assert.equal(userToken, 10);
-  });
-
 });
