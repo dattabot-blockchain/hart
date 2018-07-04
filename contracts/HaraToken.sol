@@ -459,7 +459,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     uint256 public constant INITIAL_SUPPLY = 12000 * (10 ** 5) * (10 ** uint256(decimals));
 
     uint256 public nonce;
-    mapping (uint256 => bool) public mintStatus;
+    mapping (uint8 => mapping(uint256 => bool)) public mintStatus;
 
     event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails, string data);
     event MintLog(uint256 indexed id, address indexed requester, uint256 value, bool status);
@@ -499,13 +499,13 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     * @param hash Generated hash from burn function.
     * @return A boolean that indicates if the operation was successful.
     */
-    function mintToken(uint256 id, address requester, uint256 value, bytes32 hash) public returns(bool) {
-        require(mintStatus[id]==false, "id already requested for mint");
+    function mintToken(uint256 id, address requester, uint256 value, bytes32 hash, uint8 from) public returns(bool) {
+        require(mintStatus[from][id]==false, "id already requested for mint");
         bytes32 hashInput = hashDetails(id, requester, value);
         require(hashInput == hash, "request item are not valid");
         bool status = mint(requester, value);
         emit MintLog(id, requester, value, status);
-        mintStatus[id] = status;
+        mintStatus[from][id] = status;
         return status;
     }
 
