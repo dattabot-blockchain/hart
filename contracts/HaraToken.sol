@@ -374,7 +374,7 @@ contract MintableToken is StandardToken, Ownable {
   }
 
 
-  function setMinter(address allowedMinter) public onlyOwner returns (bool){
+  function setMinter(address allowedMinter) public onlyOwner returns (bool) {
     minter = allowedMinter;
     return true;
   }
@@ -497,6 +497,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     * @param requester The address that will receive the minted tokens.
     * @param value The amount of tokens to mint.
     * @param hash Generated hash from burn function.
+    * @param from Network ID when adderss burn token.
     * @return A boolean that indicates if the operation was successful.
     */
     function mintToken(uint256 id, address requester, uint256 value, bytes32 hash, uint8 from) public returns(bool) {
