@@ -1,4 +1,4 @@
-import decodeLogs from './openzeppelin-solidity/test/helpers/decodeLogs';
+import decodeLogs from './../openzeppelin-solidity/test/helpers/decodeLogs';
 
 const HaraToken = artifacts.require('HaraToken');
 
@@ -48,4 +48,32 @@ contract('HaraToken', accounts => {
     assert.equal(userToken, 10);
   });
 
+  it('burn 20 token and mint the same amount for account[0]', async function () {
+    await token.transfer(burner, 50, { from: creator });
+    var txHash = await token.burnToken(20, "1this is tes", { from: burner });
+    const receipt = web3.eth.getTransactionReceipt(txHash.receipt.transactionHash);
+    const logs = decodeLogs(receipt.logs, HaraToken, token.address);
+    const afterBurn = await token.balanceOf(burner);
+    assert.equal(afterBurn, 30);
+    await token.mintToken(logs[2].args.id.valueOf(), logs[2].args.burner, 
+          logs[2].args.value.valueOf(), logs[2].args.hashDetails, 1, { from: creator });
+    const afterMint = await token.balanceOf(burner);
+    assert.equal(afterMint, 50);
+  });
+
+  it('minted by minter instead of creator', async function (){
+    await token.setMinter(minter, { from: creator });
+    const allowedMinter = await token.minter();
+    assert.equal(allowedMinter, minter);
+
+    await token.transfer(burner, 50, { from: creator });
+    var txBurn = await token.burnToken(20, "1this is tes", { from: burner });
+    const receiptBurn = web3.eth.getTransactionReceipt(txBurn.receipt.transactionHash);
+    const logsBurn = decodeLogs(receiptBurn.logs, HaraToken, token.address);
+    const txMint = await token.mintToken(logsBurn[2].args.id.valueOf(), logsBurn[2].args.burner, 
+        logsBurn[2].args.value.valueOf(), logsBurn[2].args.hashDetails, 1, { from: minter });
+    const receiptMint = web3.eth.getTransactionReceipt(txMint.receipt.transactionHash);
+    const logsMint = decodeLogs(receiptMint.logs, HaraToken, token.address);
+    assert.equal(logsMint[2].args.status, true);
+  });
 });
