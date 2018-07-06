@@ -458,6 +458,8 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     
     uint256 public constant INITIAL_SUPPLY = 12000 * (10 ** 5) * (10 ** uint256(decimals));
 
+    uint8 public constant HART_NETWORK_ID = 1;
+    
     uint256 public nonce;
     mapping (uint8 => mapping(uint256 => bool)) public mintStatus;
 
@@ -479,7 +481,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     */
     function burnToken(uint256 value, string data) public {
         burn(value);
-        emit BurnLog(nonce, msg.sender, value, hashDetails(nonce, msg.sender, value), data);
+        emit BurnLog(nonce, msg.sender, value, hashDetails(nonce, msg.sender, value, HART_NETWORK_ID), data);
         nonce = nonce + 1;
     }
 
@@ -497,12 +499,11 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     * @param requester The address that will receive the minted tokens.
     * @param value The amount of tokens to mint.
     * @param hash Generated hash from burn function.
-    * @param from Network ID when adderss burn token.
     * @return A boolean that indicates if the operation was successful.
     */
     function mintToken(uint256 id, address requester, uint256 value, bytes32 hash, uint8 from) public returns(bool) {
         require(mintStatus[from][id]==false, "id already requested for mint");
-        bytes32 hashInput = hashDetails(id, requester, value);
+        bytes32 hashInput = hashDetails(id, requester, value, from);
         require(hashInput == hash, "request item are not valid");
         bool status = mint(requester, value);
         emit MintLog(id, requester, value, status);
@@ -517,8 +518,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     * @param value The amount of tokens to mint.
     * @return bytes32 from keccak256 hash of inputs.
     */
-    function hashDetails(uint256 id, address burner, uint256 value) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(id, burner, value));
+    function hashDetails(uint256 id, address burner, uint256 value, uint8 hartNetworkID) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(id, burner, value, hartNetworkID));
     }   
 }
-
