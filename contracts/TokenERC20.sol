@@ -5,18 +5,25 @@ import "./../openzeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
 
 
 contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18))) {
+    // token details
     string public constant name = "HaraToken";
     string public constant symbol = "HART";
     uint8 public constant decimals = 18;
     
+    // initial supply of token
     uint256 public constant INITIAL_SUPPLY = 12000 * (10 ** 5) * (10 ** uint256(decimals));
 
+    // network hart network id from deployed contract network, as for now,
+    // 1: mainnet
+    // 2: hara network
     uint8 public constant HART_NETWORK_ID = 1;
     
     uint256 public nonce;
     mapping (uint8 => mapping(uint256 => bool)) public mintStatus;
 
+    // event for log Burn proccess
     event BurnLog(uint256 indexed id, address indexed burner, uint256 value, bytes32 hashDetails, string data);
+    // event for log Mint proccess
     event MintLog(uint256 indexed id, address indexed requester, uint256 value, bool status);
 
     /**
@@ -69,6 +76,7 @@ contract HaraToken is BurnableToken, CappedToken(1200000000 * (10 ** uint256(18)
     * @param id The unique burn ID.
     * @param burner The address that will receive the minted tokens.
     * @param value The amount of tokens to mint.
+    * @param hartNetworkID hart network id
     * @return bytes32 from keccak256 hash of inputs.
     */
     function hashDetails(uint256 id, address burner, uint256 value, uint8 hartNetworkID) internal pure returns (bytes32) {
